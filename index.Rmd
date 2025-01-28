@@ -6,10 +6,10 @@ output:
     vertical_layout: fill
     social: menu
     theme: lumen
-    logo: https://raw.githubusercontent.com/healthinnovation/innovar/master/man/figures/logo.png
+    logo: https://avatars.githubusercontent.com/u/46831228?s=400&u=6650b5f909ac9ab6e131aaf130fe4a8cfadaf663&v=4
     navbar:
+        - {icon: "fa-home", href: "https://healthinnovation.github.io/harmonize", align: right, title: "Return home"} 
         - {icon: "fa-github", href: "https://github.com/healthinnovation", align: right}
-        - { icon: "fa-home", href: "https://healthinnovation.github.io/harmonize", align: left, title: "Return home"}    
     self_contained: false
     lib_dir: "lib"
 runtime: shiny
@@ -86,7 +86,8 @@ db_inventario <- read_csv("data/db_pilot_2023_marzo_test.csv") %>%
   mutate(village = case_when(
     village == "EL VARRILLAL" ~ "EL VARILLAL",
     TRUE ~ village
-  ))
+  )) |> 
+  drop_na()
 cobertura_b <-  db_inventario %>% filter(type == "cobertura") %>% 
   drop_na(village)
 criadero_b <- db_inventario %>% filter(type == "criadero") %>% 
@@ -108,7 +109,7 @@ selectInput(
    )
 ```
 
-<br/> <br/> <br/> <br/> <br/> <img src="https://raw.githubusercontent.com/healthinnovation/harmonize/main/img/Harmonize_logo.png" width="70%" align="center"/> <br/> <br/> <br/><img src="https://raw.githubusercontent.com/healthinnovation/harmonize/app/icons/cayetano.svg" width="70%"/>
+<br/> <br/> <br/> <br/> <br/> <img src="https://raw.githubusercontent.com/healthinnovation/harmonize-visor/refs/heads/main/img/Harmonize_logo.png" width="70%" align="center"/> <br/> <br/> <br/><img src="https://imtavh.cayetano.edu.pe/wp-content/uploads/sites/30/2022/11/logo-IMT-Oficina-de-Investigacion-IMTAVH-600x172.jpeg" width="100%"/>
 </center>
 
 ## Column {data-height="700"}
@@ -169,8 +170,9 @@ output$map <- renderLeaflet({
           data = criadero,
           lng = criadero$Longitud,
           lat = criadero$Latitud,
-          radius = 13,
-          group = "focos de criadero" 
+          group = "focos de criadero",
+          max = 0.01,
+          radius = 14
         ) %>% 
         addCircleMarkers(
           data = cobertura,
@@ -184,8 +186,7 @@ output$map <- renderLeaflet({
           data = cobertura,
           lng = cobertura$Longitud,
           lat = cobertura$Latitud,
-          radius = 13,
-          group = "focos de cobertura" 
+          group = "focos de cobertura"
         ) %>% 
         setView(lng = lon,lat = lat,zoom = 10) %>%
         addLayersControl(
@@ -218,8 +219,10 @@ output$map <- renderLeaflet({
           data = criadero,
           lng = criadero$Longitud,
           lat = criadero$Latitud,
-          radius = 13,
-          group = "focos de criadero" 
+          group = "focos de criadero",
+          max = 0.01,
+          radius = 14
+          
         ) %>% 
         addCircleMarkers(
           data = cobertura,
@@ -238,8 +241,9 @@ output$map <- renderLeaflet({
           data = cobertura,
           lng = cobertura$Longitud,
           lat = cobertura$Latitud,
-          radius = 13,
-          group = "focos de cobertura" 
+          group = "focos de cobertura",
+          max = 0.01,
+          radius  = 14
         ) %>% 
         flyToBounds(
           lng1 = region[["xmin"]],
